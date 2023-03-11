@@ -11,20 +11,11 @@ export default class Clases extends React.Component {
       lista: [],
     };
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  // componentDidMount() {
-  //   setTimeout(() => {
-  //     this.setState({ nombre: "Juan", apellido: "Mendez" });
-  //   }, 3000);
-  // }
-
-  handleChange(event) {
-    console.log(event);
-    this.setState({ nombre: event.target.value });
+    console.log("Constructor");
   }
 
   render() {
+    console.log("Render");
     return (
       <div>
         <h1>Hola, mi nombre es {this.state.nombre}</h1>
@@ -37,5 +28,27 @@ export default class Clases extends React.Component {
         <PropsClases apellido={this.state.apellido} />
       </div>
     );
+  }
+
+  componentDidMount() {
+    console.log("Did Mount");
+    setTimeout(() => {
+      this.setState({ nombre: "Juan", apellido: "Mendez" }, () => {
+        // console.log(this.state.nombre);
+      });
+    }, 3000);
+  }
+
+  componentDidUpdate() {
+    console.log("Did Update");
+  }
+
+  componentWillUnmount() {
+    console.log("Will Unmount");
+  }
+
+  handleChange(event) {
+    console.log(event);
+    this.setState({ nombre: event.target.value });
   }
 }

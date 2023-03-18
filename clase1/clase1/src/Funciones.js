@@ -1,18 +1,28 @@
 import React from "react";
 import PropsFunciones from "./PropsFunciones";
 
+let timerId = null;
+
 export default function Funciones() {
   const [nombre, setNombre] = React.useState("Luis");
   const [apellido, setApellido] = React.useState("Cascante");
 
+  // componentDidMount
   React.useEffect(() => {
     console.log("Did Mount");
-    setTimeout(() => {
+    timerId = setTimeout(() => {
       setNombre("Juan");
       setApellido("Mendez");
     }, 3000);
+
+    // componentWillUnmount
+    return () => {
+      console.log("Will Unmount");
+      clearTimeout(timerId);
+    };
   }, []);
 
+  // componentDidUpdate
   React.useEffect(() => {
     console.log("Did Update");
     console.log(nombre);

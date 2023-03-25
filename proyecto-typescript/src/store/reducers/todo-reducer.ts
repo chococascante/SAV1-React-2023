@@ -6,7 +6,7 @@ export interface ITodoReducer {
   todos: ITodo[];
 }
 
-const initialState = {
+const initialState: ITodoReducer = {
   todos: [],
 };
 

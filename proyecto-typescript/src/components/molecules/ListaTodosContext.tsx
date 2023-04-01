@@ -2,6 +2,9 @@ import React from "react";
 import { useEjemploContext } from "../../contexts/Ejemplo";
 import { Todo } from "./Todo";
 import "../../styles/listas.css";
+import { Button as MUIButton, TextField } from "@mui/material";
+import { Button as AntdButton } from "antd";
+import styled from "@emotion/styled";
 
 export const ListaTodosContext = () => {
   const { todos, loading, agregarTodo } = useEjemploContext();
@@ -17,17 +20,34 @@ export const ListaTodosContext = () => {
 
   return (
     <div>
-      <input
-        type="text"
-        onKeyDown={handleEnter}
-        placeholder="Ingrese un nuevo todo"
-      />
-      <button className="btn btn-primary">Esto es un botón</button>
-      <ul className="lista" id="lista">
-        {todos.map((todo) => {
-          return <Todo key={todo.id} todo={todo} />;
-        })}
-      </ul>
+      <Container fondo="#ccc">
+        <TextField
+          variant="standard"
+          label="Ingrese un nuevo todo."
+          type="text"
+          onKeyDown={handleEnter}
+          placeholder="Ingrese un nuevo todo."
+        />
+
+        <StyledButton variant="contained" className="bg-orange-600">
+          Esto es un botón
+        </StyledButton>
+        <AntdButton className="bg-lime-500">Esto es otro botón.</AntdButton>
+        <ul className="lista" id="lista">
+          {todos.map((todo) => {
+            return <Todo key={todo.id} todo={todo} />;
+          })}
+        </ul>
+      </Container>
     </div>
   );
 };
+
+const Container = styled.div<{ fondo: string }>`
+  padding: 20px;
+  ${(props) => props.fondo && `background-color: ${props.fondo};`}
+`;
+
+const StyledButton = styled(MUIButton)`
+  color: #fff;
+`;

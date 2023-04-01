@@ -1,6 +1,8 @@
 import React from "react";
 import { useEjemploContext } from "../../contexts/Ejemplo";
 import { ITodo } from "../../models/ITodo";
+import Checkbox from "@mui/material/Checkbox";
+import { Typography } from "@mui/material";
 
 export interface TodoProps {
   todo: ITodo;
@@ -16,14 +18,19 @@ export const Todo: React.FC<TodoProps> = ({ todo }) => {
   return (
     <li className="list-none">
       <label>
-        <input
+        <Checkbox checked={todo.completed} onChange={handleCheck} />
+        {/* <input
           type="checkbox"
           checked={todo.completed}
           onChange={handleCheck}
-        />
-        <span className={`${todo.completed ? "line-through" : "list-none"}`}>
+        /> */}
+        <Typography
+          variant="body1"
+          component="span"
+          className={`${todo.completed ? "line-through" : "list-none"}`}
+        >
           {todo.title}
-        </span>
+        </Typography>
       </label>
     </li>
   );

@@ -1,36 +1,30 @@
-// import { ListaPublicacionesWrapper } from "./components/organisms/ListaPublicacionesWrapper";
-// import { Provider } from "react-redux";
-// import { createStore, combineReducers, applyMiddleware } from "redux";
-// import thunk from "redux-thunk";
-// import { configureStore } from "@reduxjs/toolkit";
-// import { todoReducer } from "./store/reducers/todo-reducer";
-// import { userReducer } from "./store/reducers/user-reducer";
-// import reducers from "./store/reducers";
-// import { ListaTodosFunciones } from "./components/molecules/ListaTodosFunciones.js";
 import { EjemploContextProvider } from "./contexts/Ejemplo";
 import { ListaTodosContext } from "./components/molecules/ListaTodosContext";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ListaPublicacionesWrapper } from "./components/organisms/ListaPublicacionesWrapper";
+import { PublicacionPorId } from "./components/organisms/PublicacionPorId";
 
-// const storeViejo = createStore(
-//   combineReducers(reducers),
-//   applyMiddleware(thunk)
-// );
-
-// const storeNuevo = configureStore({
-//   reducer: {
-//     todoReducer,
-//   },
-// });
-
-function App() {
-  return (
-    <div>
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: (
       <EjemploContextProvider>
         <ListaTodosContext />
       </EjemploContextProvider>
+    ),
+  },
+  {
+    path: "/publicaciones",
+    element: <ListaPublicacionesWrapper />,
+  },
+  {
+    path: "/publicaciones/:id",
+    element: <PublicacionPorId />,
+  },
+]);
 
-      <p>Hola Mundo</p>
-    </div>
-  );
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App;

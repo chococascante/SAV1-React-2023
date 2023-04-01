@@ -14,14 +14,16 @@ export const Todo: React.FC<TodoProps> = ({ todo }) => {
   };
 
   return (
-    <li className="list-none">
+    <li style={{ listStyleType: "none" }}>
       <label>
         <input
           type="checkbox"
           checked={todo.completed}
           onChange={handleCheck}
         />
-        <span className={`${todo.completed ? "line-through" : "list-none"}`}>
+        <span
+          style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+        >
           {todo.title}
         </span>
       </label>

@@ -1,7 +1,6 @@
 import React from "react";
 import { useEjemploContext } from "../../contexts/Ejemplo";
 import { Todo } from "./Todo";
-import "../../styles/listas.css";
 
 export const ListaTodosContext = () => {
   const { todos, loading, agregarTodo } = useEjemploContext();
@@ -16,18 +15,17 @@ export const ListaTodosContext = () => {
   };
 
   return (
-    <div>
+    <>
       <input
         type="text"
         onKeyDown={handleEnter}
         placeholder="Ingrese un nuevo todo"
       />
-      <button className="btn btn-primary">Esto es un botón</button>
-      <ul className="lista" id="lista">
+      <ul>
         {todos.map((todo) => {
           return <Todo key={todo.id} todo={todo} />;
         })}
       </ul>
-    </div>
+    </>
   );
 };

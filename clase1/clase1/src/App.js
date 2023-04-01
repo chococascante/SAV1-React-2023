@@ -46,7 +46,7 @@ const listaEstudiantes = [
 function App() {
   return (
     <div>
-      <ListaEstudiantes listaEstudiantes={listaNombresEstudiantes} />
+      <ListaEstudiantes listaEstudiantes={listaEstudiantes} />
       <ListaEstudiantesClass listaEstudiantes={listaNombresEstudiantes} />
     </div>
   );

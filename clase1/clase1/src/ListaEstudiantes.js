@@ -5,10 +5,10 @@ export const ListaEstudiantes = ({ listaEstudiantes }) => {
     <React.Fragment>
       {listaEstudiantes.map((estudiante) => (
         <div key={estudiante}>
-          <p>{estudiante}</p>
-          <p>nombre: Nombre</p>
-          <p>apellido: Apellido</p>
-          <p>edad: 20</p>
+          <p>{estudiante.id}</p>
+          <p>nombre: {estudiante.nombre}</p>
+          <p>apellido: {estudiante.apellido}</p>
+          <p>edad: {estudiante.edad}</p>
         </div>
       ))}
     </React.Fragment>

@@ -1,7 +1,8 @@
-import axios from "axios";
 import React from "react";
 import { ITodo } from "../models/ITodo";
 import { IUser } from "../models/IUser";
+import { getTodos, saveTodo } from "../services/firebase";
+import { useFirebaseAuth } from "./FirebaseAuthContext";
 
 export interface EjemploContextProps {
   todos: ITodo[];
@@ -12,7 +13,7 @@ export interface EjemploContextProps {
   setUsers: React.Dispatch<React.SetStateAction<IUser[]>>;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 
-  agregarTodo: (title: string) => void;
+  agregarTodo: (title: string) => Promise<void>;
   toggleTodoCompleted: (newValue: boolean, todoId: number) => void;
 }
 
@@ -23,7 +24,7 @@ const EjemploContext = React.createContext<EjemploContextProps>({
   setTodos: () => {},
   setUsers: () => {},
   setLoading: () => {},
-  agregarTodo: () => {},
+  agregarTodo: () => Promise.resolve(),
   toggleTodoCompleted: () => {},
 });
 
@@ -33,33 +34,40 @@ export const EjemploContextProvider: React.FC<React.PropsWithChildren> = ({
   const [todos, setTodos] = React.useState<ITodo[]>([]);
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+  const { authUser } = useFirebaseAuth();
 
   const traerTodos = React.useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        "https://jsonplaceholder.typicode.com/todos"
-      );
+      if (!authUser) return;
+      const response = await getTodos(authUser);
 
-      setTodos(response.data);
+      setTodos(response);
       setLoading(false);
     } catch (error) {
       console.error(error);
     }
-  }, []);
+  }, [authUser]);
 
   const agregarTodo = React.useCallback(
-    (title: string) => {
+    async (title: string) => {
+      if (!authUser || !title) return;
       const newTodo: ITodo = {
         id: Math.random(),
         title,
         completed: false,
       };
+      if (!authUser) return;
+      try {
+        await saveTodo(newTodo, authUser);
 
-      const newTodos = [newTodo, ...todos];
-      setTodos(newTodos);
+        const nuevosTodos = await getTodos(authUser);
+        setTodos(nuevosTodos);
+      } catch (error) {
+        console.error(error);
+      }
     },
-    [todos]
+    [authUser]
   );
 
   const toggleTodoCompleted = React.useCallback(

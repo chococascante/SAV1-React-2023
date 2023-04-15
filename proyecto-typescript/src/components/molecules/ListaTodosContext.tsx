@@ -5,15 +5,17 @@ import "../../styles/listas.css";
 import { Button as MUIButton, TextField } from "@mui/material";
 import { Button as AntdButton } from "antd";
 import styled from "@emotion/styled";
+import { useFirebaseAuth } from "../../contexts/FirebaseAuthContext";
 
 export const ListaTodosContext = () => {
   const { todos, loading, agregarTodo } = useEjemploContext();
+  const { logout } = useFirebaseAuth();
 
   if (loading) return <p>Cargando...</p>;
 
-  const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnter = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      agregarTodo(e.currentTarget.value);
+      await agregarTodo(e.currentTarget.value);
       e.currentTarget.value = "";
     }
   };
@@ -21,9 +23,7 @@ export const ListaTodosContext = () => {
   return (
     <div>
       <Container fondo="#ccc">
-        <TextField
-          variant="standard"
-          label="Ingrese un nuevo todo."
+        <input
           type="text"
           onKeyDown={handleEnter}
           placeholder="Ingrese un nuevo todo."
@@ -33,6 +33,9 @@ export const ListaTodosContext = () => {
           Esto es un botón
         </StyledButton>
         <AntdButton className="bg-lime-500">Esto es otro botón.</AntdButton>
+        <MUIButton type="button" onClick={logout}>
+          Cerrar sesión
+        </MUIButton>
         <ul className="lista" id="lista">
           {todos.map((todo) => {
             return <Todo key={todo.id} todo={todo} />;

@@ -8,12 +8,12 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuthContext";
 import { useNavigate } from "react-router-dom";
 
-interface LoginFormValues {
+interface SignupFormValues {
   email: string;
   password: string;
 }
 
-const LoginSchema = Yup.object().shape({
+const SignupSchema = Yup.object().shape({
   email: Yup.string()
     .email("Correo inválido")
     .required("Campo requerido")
@@ -23,23 +23,23 @@ const LoginSchema = Yup.object().shape({
     .min(8, "Mínimo 8 caracteres"),
 });
 
-export const LoginForm = () => {
-  const { login } = useFirebaseAuth();
+export const SignupForm = () => {
+  const { signup } = useFirebaseAuth();
   const navigate = useNavigate();
 
-  const onSubmit = async (values: LoginFormValues) => {
-    await login(values.email, values.password);
+  const onSubmit = async (values: SignupFormValues) => {
+    await signup(values.email, values.password);
     navigate("/");
   };
 
   return (
     <div className="mt-20% flex flex-col w-4/5 sm:w-1/2 lg:w-1/3 p-8 space-y-5 shadow-xl">
-      <Formik<LoginFormValues>
+      <Formik<SignupFormValues>
         initialValues={{
           email: "",
           password: "",
         }}
-        validationSchema={LoginSchema}
+        validationSchema={SignupSchema}
         onSubmit={onSubmit}
         validateOnBlur
         validateOnChange
@@ -60,9 +60,7 @@ export const LoginForm = () => {
             onSubmit={handleSubmit}
             className="flex flex-col items-center gap-5"
           >
-            <Typography>
-              ¡Bienvenido! Por favor, inicia sesión para continuar.
-            </Typography>
+            <Typography>Por favor cree un usuario.</Typography>
 
             <TextInput
               id="email"

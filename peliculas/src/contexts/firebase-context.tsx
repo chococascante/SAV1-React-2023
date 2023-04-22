@@ -28,7 +28,7 @@ const initFirebase = () => {
   return app;
 };
 
-export const FirebaseContext = React.createContext<FirebaseContextProps>({
+const FirebaseContext = React.createContext<FirebaseContextProps>({
   firebaseApp: initFirebase(),
   firebaseAuth: null,
 });

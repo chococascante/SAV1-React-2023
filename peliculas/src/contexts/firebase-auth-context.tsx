@@ -39,5 +39,43 @@ export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
     }
   }, []);
 
-  return <div>firebase-auth-context</div>;
+  const register = React.useCallback(
+    async (email: string, password: string) => {
+      try {
+        const userCredential = await createUserWithEmailAndPassword(
+          getAuth(),
+          email,
+          password
+        );
+        setUser(userCredential);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    []
+  );
+
+  const logout = React.useCallback(async () => {
+    try {
+      await signOut(getAuth());
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const contextValue: FirebaseAuthContextProps = React.useMemo(
+    () => ({
+      user,
+      login,
+      logout,
+      register,
+    }),
+    [user, login, logout, register]
+  );
+
+  return (
+    <FirebaseAuthContext.Provider value={contextValue}>
+      {children}
+    </FirebaseAuthContext.Provider>
+  );
 };

@@ -1,3 +1,5 @@
+import { IMovie } from "@/contexts/peliculas-context";
+import { User } from "firebase/auth";
 import {
   addDoc,
   getFirestore,
@@ -6,14 +8,12 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { ITodo } from "../models/ITodo";
-import { User } from "firebase/auth";
 
-export const saveTodo = async (todo: ITodo, firebaseUser: User) => {
+export const saveFavoriteMovie = async (movie: IMovie, firebaseUser: User) => {
   try {
-    const docRef = await addDoc(collection(getFirestore(), "todos"), {
+    const docRef = await addDoc(collection(getFirestore(), "movies"), {
       userId: firebaseUser.uid,
-      ...todo,
+      ...movie,
     });
 
     console.log("Document written with ID: ", docRef.id);
@@ -24,16 +24,16 @@ export const saveTodo = async (todo: ITodo, firebaseUser: User) => {
 
 export const getTodos = async (firebaseUser: User) => {
   const firebaseQuery = query(
-    collection(getFirestore(), "todos"),
+    collection(getFirestore(), "movies"),
     where("userId", "==", firebaseUser.uid)
   );
 
   const querySnapshot = await getDocs(firebaseQuery);
-  const todos: ITodo[] = [];
+  const movies: IMovie[] = [];
 
   querySnapshot.forEach((doc) => {
-    todos.push({ ...(doc.data() as ITodo), documentId: doc.id });
+    movies.push({ ...(doc.data() as IMovie) });
   });
 
-  return todos;
+  return movies;
 };

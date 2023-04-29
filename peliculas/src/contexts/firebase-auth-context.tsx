@@ -79,3 +79,6 @@ export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
     </FirebaseAuthContext.Provider>
   );
 };
+
+export const useFirebaseAuth = () =>
+  React.useContext<FirebaseAuthContextProps>(FirebaseAuthContext);

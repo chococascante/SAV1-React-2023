@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { useFirebaseAuth } from "@/contexts/firebase-auth-context";
 import { Typography } from "@mui/material";
 import { TextInput } from "@/components/atoms/TextInput";
+import { LoadingButton } from "@mui/lab";
 
 const REQUIRED_FIELD_MESSAGE = "Campo requerido.";
 const INVALID_EMAIL_MESSAGE = "Correo inválido.";
@@ -25,6 +26,18 @@ const LoginFormSchema = Yup.object().shape({
 
 const LoginPage = () => {
   const { login } = useFirebaseAuth();
+
+  const handleSubmit = React.useCallback(
+    async (values: LoginFormValues) => {
+      try {
+        await login(values.email, values.password);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [login]
+  );
+
   return (
     <div>
       <Formik<LoginFormValues>
@@ -36,7 +49,7 @@ const LoginPage = () => {
         validateOnMount
         validateOnChange
         validationSchema={LoginFormSchema}
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
       >
         {({
           values,
@@ -49,7 +62,7 @@ const LoginPage = () => {
           isValid,
           isValidating,
         }) => (
-          <form>
+          <form onSubmit={handleSubmit}>
             <Typography>
               ¡Bienvenido de nuevo! Por favor, inicia sesión.
             </Typography>
@@ -64,6 +77,25 @@ const LoginPage = () => {
               error={!!(touched.email && errors.email)}
               helperText={touched.email && errors.email}
             />
+
+            <TextInput
+              id="password"
+              type="password"
+              label="Contraseña"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.password}
+              error={!!(touched.password && errors.password)}
+              helperText={touched.password && errors.password}
+            />
+
+            <LoadingButton
+              disabled={!isValid || isValidating}
+              loading={isSubmitting || isValidating}
+              type="submit"
+            >
+              Iniciar sesión
+            </LoadingButton>
           </form>
         )}
       </Formik>

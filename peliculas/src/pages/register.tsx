@@ -11,47 +11,52 @@ const REQUIRED_FIELD_MESSAGE = "Campo requerido.";
 const INVALID_EMAIL_MESSAGE = "Correo inválido.";
 const MIN_PASSWORD_LENGTH_MESSAGE = "Mínimo 8 caracteres.";
 
-interface LoginFormValues {
+interface RegisterFormValues {
   email: string;
   password: string;
+  repeatPassword: string;
 }
 
-const LoginFormSchema = Yup.object().shape({
+const RegisterFormSchema = Yup.object().shape({
   email: Yup.string()
     .email(INVALID_EMAIL_MESSAGE)
     .required(REQUIRED_FIELD_MESSAGE),
   password: Yup.string()
     .required(REQUIRED_FIELD_MESSAGE)
     .min(8, MIN_PASSWORD_LENGTH_MESSAGE),
+  repeatPassword: Yup.string()
+    .required(REQUIRED_FIELD_MESSAGE)
+    .oneOf([Yup.ref("password")], "Passwords must match"),
 });
 
-const LoginPage = () => {
-  const { login } = useFirebaseAuth();
+const RegisterPage = () => {
+  const { register } = useFirebaseAuth();
   const router = useRouter();
 
   const handleSubmit = React.useCallback(
-    async (values: LoginFormValues) => {
+    async (values: RegisterFormValues) => {
       try {
-        await login(values.email, values.password);
+        await register(values.email, values.password);
         router.push("/");
       } catch (error) {
         console.error(error);
       }
     },
-    [login, router]
+    [register, router]
   );
 
   return (
     <div>
-      <Formik<LoginFormValues>
+      <Formik<RegisterFormValues>
         initialValues={{
           email: "",
           password: "",
+          repeatPassword: "",
         }}
         validateOnBlur
         validateOnMount
         validateOnChange
-        validationSchema={LoginFormSchema}
+        validationSchema={RegisterFormSchema}
         onSubmit={handleSubmit}
       >
         {({
@@ -92,6 +97,17 @@ const LoginPage = () => {
               helperText={touched.password && errors.password}
             />
 
+            <TextInput
+              id="repeatPassword"
+              type="repeatPassword"
+              label="Repita contraseña"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.repeatPassword}
+              error={!!(touched.repeatPassword && errors.repeatPassword)}
+              helperText={touched.repeatPassword && errors.repeatPassword}
+            />
+
             <LoadingButton
               disabled={!isValid || isValidating}
               loading={isSubmitting || isValidating}
@@ -106,4 +122,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -1,17 +1,17 @@
 import React from "react";
 import {
-  UserCredential,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
   getAuth,
+  User,
 } from "firebase/auth";
 
 export interface FirebaseAuthContextProps {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
-  user: UserCredential | undefined;
+  user: User | undefined;
 }
 
 const FirebaseAuthContext = React.createContext<FirebaseAuthContextProps>({
@@ -24,7 +24,7 @@ const FirebaseAuthContext = React.createContext<FirebaseAuthContextProps>({
 export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
-  const [user, setUser] = React.useState<UserCredential | undefined>(undefined);
+  const [user, setUser] = React.useState<User | undefined>(undefined);
 
   const login = React.useCallback(async (email: string, password: string) => {
     try {
@@ -33,7 +33,7 @@ export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
         email,
         password
       );
-      setUser(userCredential);
+      setUser(userCredential.user);
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +47,7 @@ export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
           email,
           password
         );
-        setUser(userCredential);
+        setUser(userCredential.user);
       } catch (error) {
         console.error(error);
       }
@@ -61,6 +61,19 @@ export const FirebaseAuthContextProvider: React.FC<React.PropsWithChildren> = ({
     } catch (error) {
       console.error(error);
     }
+  }, []);
+
+  const authStateChanged = async (user: User | null) => {
+    if (!user) {
+      setUser(undefined);
+      return;
+    }
+    setUser(user);
+  };
+
+  React.useEffect(() => {
+    const unsubscribe = getAuth().onAuthStateChanged(authStateChanged);
+    return () => unsubscribe();
   }, []);
 
   const contextValue: FirebaseAuthContextProps = React.useMemo(

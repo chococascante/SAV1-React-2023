@@ -6,6 +6,7 @@ import { Typography } from "@mui/material";
 import { TextInput } from "@/components/atoms/TextInput";
 import { LoadingButton } from "@mui/lab";
 import { useRouter } from "next/navigation";
+import { AuthPage } from "@/components/layouts/AuthPage";
 
 const REQUIRED_FIELD_MESSAGE = "Campo requerido.";
 const INVALID_EMAIL_MESSAGE = "Correo inválido.";
@@ -42,67 +43,69 @@ const LoginPage = () => {
   );
 
   return (
-    <div>
-      <Formik<LoginFormValues>
-        initialValues={{
-          email: "",
-          password: "",
-        }}
-        validateOnBlur
-        validateOnMount
-        validateOnChange
-        validationSchema={LoginFormSchema}
-        onSubmit={handleSubmit}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          isValid,
-          isValidating,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Typography>
-              ¡Bienvenido de nuevo! Por favor, inicia sesión.
-            </Typography>
+    <AuthPage>
+      <div>
+        <Formik<LoginFormValues>
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          validateOnBlur
+          validateOnMount
+          validateOnChange
+          validationSchema={LoginFormSchema}
+          onSubmit={handleSubmit}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleBlur,
+            handleChange,
+            handleSubmit,
+            isSubmitting,
+            isValid,
+            isValidating,
+          }) => (
+            <form onSubmit={handleSubmit}>
+              <Typography>
+                ¡Bienvenido de nuevo! Por favor, inicia sesión.
+              </Typography>
 
-            <TextInput
-              id="email"
-              type="email"
-              label="Correo electrónico"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-              error={!!(touched.email && errors.email)}
-              helperText={touched.email && errors.email}
-            />
+              <TextInput
+                id="email"
+                type="email"
+                label="Correo electrónico"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                error={!!(touched.email && errors.email)}
+                helperText={touched.email && errors.email}
+              />
 
-            <TextInput
-              id="password"
-              type="password"
-              label="Contraseña"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.password}
-              error={!!(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-            />
+              <TextInput
+                id="password"
+                type="password"
+                label="Contraseña"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+                error={!!(touched.password && errors.password)}
+                helperText={touched.password && errors.password}
+              />
 
-            <LoadingButton
-              disabled={!isValid || isValidating}
-              loading={isSubmitting || isValidating}
-              type="submit"
-            >
-              Iniciar sesión
-            </LoadingButton>
-          </form>
-        )}
-      </Formik>
-    </div>
+              <LoadingButton
+                disabled={!isValid || isValidating}
+                loading={isSubmitting || isValidating}
+                type="submit"
+              >
+                Iniciar sesión
+              </LoadingButton>
+            </form>
+          )}
+        </Formik>
+      </div>
+    </AuthPage>
   );
 };
 

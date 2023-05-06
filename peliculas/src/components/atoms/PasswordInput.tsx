@@ -15,11 +15,16 @@ export const PasswordInput: React.FC<TextFieldProps> = (props) => {
         endAdornment: (
           <InputAdornment position="end">
             <IconButton
+              data-testid="password-input-icon"
               aria-label="toggle password visibility"
               onClick={() => setShowPassword(!showPassword)}
               edge="end"
             >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
+              {showPassword ? (
+                <VisibilityOff data-testid="visibility-off" />
+              ) : (
+                <Visibility data-testid="visibility-on" />
+              )}
             </IconButton>
           </InputAdornment>
         ),
